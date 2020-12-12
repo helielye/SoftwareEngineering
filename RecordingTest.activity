@@ -1,0 +1,105 @@
+.java
+package com.example.ai;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageButton;
+
+public class RecordingTest extends AppCompatActivity {
+
+    ImageButton btn_back,btn_next;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_recording_test);
+
+        btn_back = (ImageButton) findViewById(R.id.btn_back);
+        btn_next = (ImageButton) findViewById(R.id.btn_next);
+
+        btn_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(RecordingTest.this, grammerTest.class);
+                startActivity(i);
+            }
+        });
+
+        btn_next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(RecordingTest.this, FirstVideo.class);
+                startActivity(i);
+            }
+        });
+    }
+}
+
+
+
+.xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".RecordingTest">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="192dp"
+        android:layout_height="58dp"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        app:srcCompat="@android:drawable/sym_def_app_icon" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="196dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/btn_pass"
+            android:layout_width="match_parent"
+            android:layout_height="118dp"
+            android:gravity="center"
+            android:text="성공했습니다." />
+
+        <TextView
+            android:id="@+id/btn_fail"
+            android:layout_width="match_parent"
+            android:layout_height="118dp"
+            android:gravity="center"
+            android:text="실패하였습니다." />
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/btn_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/c"
+            android:text="뒤로가기" />
+
+        <ImageButton
+            android:id="@+id/btn_next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/d"
+            android:text="다음페이지" />
+    </LinearLayout>
+
+
+</LinearLayout>
