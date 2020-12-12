@@ -1,0 +1,255 @@
+.java
+package com.example.ai;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.media.MediaRecorder;
+import android.os.Bundle;
+import android.os.Environment;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.ai.MainActivity;
+
+import java.io.File;
+import java.io.IOException;
+
+public class Question extends AppCompatActivity {
+
+    MediaRecorder recorder;
+    String filename;
+
+    ImageButton ib_record;
+    ImageButton ib_stop;
+
+    TextView question1;
+    TextView question2;
+    TextView question3;
+
+    ImageButton btn_back;
+    ImageButton btn_next;
+
+    int record_count = 0;
+    int stop_count = 0;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_question);
+
+        ib_record = (ImageButton) findViewById(R.id.ib_record);
+        ib_stop = (ImageButton)findViewById(R.id.ib_stop);
+        question1 = (TextView) findViewById(R.id.question);
+        question2 = (TextView) findViewById(R.id.question2);
+        question3 = (TextView) findViewById(R.id.question3);
+
+        btn_back = (ImageButton) findViewById(R.id.btn_back);
+        btn_next = (ImageButton) findViewById(R.id.btn_next);
+
+        permissionCheck();
+
+        btn_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(Question.this, MainActivity.class);
+                startActivity(i);
+            }
+        });
+
+        btn_next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(Question.this, grammerTest.class);
+                startActivity(i);
+            }
+        });
+
+        ib_record.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ib_record.setColorFilter(Color.parseColor("#DDDDDD"), PorterDuff.Mode.SRC_IN);
+                ib_stop.setColorFilter(Color.parseColor("#000000"), PorterDuff.Mode.SRC_IN);
+                recordAudio();
+                if(record_count == 3){
+                    ib_stop.setColorFilter(Color.parseColor("#000000"), PorterDuff.Mode.SRC_IN);
+                    ib_record.setColorFilter(Color.parseColor("#000000"), PorterDuff.Mode.SRC_IN);
+                    ib_stop.setEnabled(false);
+                    ib_record.setEnabled(false);
+                }
+                record_count++;
+            }
+        });
+
+        ib_stop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ib_stop.setColorFilter(Color.parseColor("#DDDDDD"), PorterDuff.Mode.SRC_IN);
+                ib_record.setColorFilter(Color.parseColor("#000000"), PorterDuff.Mode.SRC_IN);
+                if (stop_count == 0) question1.setText(question2.getText());
+                if (stop_count == 1) question1.setText(question3.getText());
+                if(record_count == 3){
+                    ib_stop.setColorFilter(Color.parseColor("#000000"), PorterDuff.Mode.SRC_IN);
+                    ib_record.setColorFilter(Color.parseColor("#000000"), PorterDuff.Mode.SRC_IN);
+                    ib_stop.setEnabled(false);
+                    ib_record.setEnabled(false);
+                }
+                stop_count++;
+            }
+        });
+    }
+
+    public void recordAudio() {
+        try {
+            File sdcard = Environment.getExternalStorageDirectory();
+            File file = new File(sdcard, "recorded.mp4");
+            filename = file.getAbsolutePath();
+            recorder = new MediaRecorder();
+
+            recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+            recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+            recorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
+            recorder.setOutputFile(filename);
+
+            recorder.prepare();
+            recorder.start();
+            Toast.makeText(this, "녹음 시작됨.", Toast.LENGTH_SHORT).show();
+
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+//        public void stopRecording(){
+//         if(recorder != null) {
+//                recorder.stop();
+//                recorder.release();
+//                recorder = null;
+//                recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_2_TS);
+//                Toast.makeText(this, "녹음 중지됨.", Toast.LENGTH_SHORT).show();
+//            }
+//        }
+
+    public void permissionCheck(){
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO}, 1);
+        }
+    }
+}
+
+
+
+.xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Question">
+
+    <TextView
+        android:id="@+id/question"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="5"
+        android:ems="10"
+        android:gravity="center|center_vertical"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        android:inputType="textMultiLine"
+        android:textSize="20dp"
+        android:text="Question1 : \n What is your favorite Brand?"/>
+
+    <TextView
+        android:id="@+id/question2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="5"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        android:ems="10"
+        android:gravity="center|center_vertical"
+        android:inputType="textMultiLine"
+        android:visibility="gone"
+        android:textSize="20dp"
+        android:text="Question2 : \n Which pattern do you like?"/>
+
+    <TextView
+        android:id="@+id/question3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="5"
+        android:ems="10"
+        android:gravity="center|center_vertical"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        android:inputType="textMultiLine"
+        android:visibility="gone"
+        android:textSize="20dp"
+        android:text="Question3 : \n What style of clothes do yo enjoy wearing?"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/ib_record"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="#ffffff"
+            android:padding="2px"
+            app:srcCompat="@drawable/b" />
+
+        <ImageButton
+            android:id="@+id/ib_stop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#ffffff"
+            android:layout_gravity="center"
+            android:padding="2px"
+            app:srcCompat="@drawable/a" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/btn_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="뒤로가기"
+            android:src="@drawable/c"/>
+
+        <ImageButton
+            android:id="@+id/btn_next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="다음페이지"
+            android:src="@drawable/d"/>
+    </LinearLayout>
+
+
+</LinearLayout>
