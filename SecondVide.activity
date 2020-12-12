@@ -1,0 +1,185 @@
+.java
+package com.example.ai;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
+import android.media.MediaPlayer;
+import android.net.Uri;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.VideoView;
+
+public class SecondVideo extends AppCompatActivity {
+
+    protected VideoView mVideoView = null;
+
+    Button btnNext, btnPrior;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_second_video);
+
+        getControls();
+        prepareVideoViewVideo();
+
+        btnNext = (Button)findViewById(R.id.btnNext);
+        btnPrior = (Button)findViewById(R.id.btnPrior);
+
+        btnNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),ThirdVideo.class);
+                startActivity(intent);
+            }
+        });
+        btnPrior.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),FirstVideo.class);
+                startActivity(intent);
+            }
+        });
+
+    }
+    protected void getControls(){
+        Button btn = (Button)findViewById(R.id.btnPlay);
+        btn.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                playVideoView();
+            }
+        });
+        btn=(Button)findViewById(R.id.btnStop);
+        btn.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                stopVideoView();
+            }
+        });
+        mVideoView = (VideoView)findViewById(R.id.videoView);
+    }
+    protected void prepareVideoViewVideo(){
+        Uri url = Uri.parse("android.resource://"+getPackageName()+"/"+R.raw.fashion2);//패션 1
+        mVideoView.setVideoURI(url);
+
+        mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mediaPlayer) {
+                playVideoView();
+            }
+        });
+    }
+    protected void playVideoView(){
+        mVideoView.start();
+    }
+    protected void stopVideoView(){
+        mVideoView.pause();
+    }
+}
+
+
+
+
+.xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".FirstVideo">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="영상을 통해 표현을 배워봐요!"
+        android:layout_margin="10dp"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Fashion"
+        android:textSize="25dp"
+        android:layout_margin="20dp"
+        android:gravity="center"/>
+
+    <!--   패션-->
+    <VideoView
+        android:id="@+id/videoView"
+        android:layout_width="match_parent"
+        android:layout_height="350dp"
+        android:layout_margin="20dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/btnPlay"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:text="Play"
+            android:gravity="center" ></Button>
+        <Button
+            android:id="@+id/btnStop"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:text="Stop"></Button>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:background="#9AC4CA"
+        android:text="I like the look of these trousers because it looks like smart loungewear"
+        android:textSize="15dp"
+        android:textStyle="bold"
+        android:padding="7dp"
+        android:gravity="center"></TextView>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="이 바지 괜찮다. 입기 좋은 츄리닝 같아."
+        android:textSize="15dp"
+        android:textStyle="bold"
+        android:layout_margin="20dp"
+        android:gravity="center"></TextView>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center">
+
+        <Button
+            android:id="@+id/btnPrior"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:text="PRIOR"
+            app:backgroundTint="#514F49"></Button>
+        <Button
+            android:id="@+id/btnNext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="NEXT VIDEO"
+            android:layout_weight="1"
+            app:backgroundTint="#FFC107"></Button>
+    </LinearLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="20dp"
+        android:text="출처: https://youtu.be/PP6f-ekOUW8"></TextView>
+
+</LinearLayout>
